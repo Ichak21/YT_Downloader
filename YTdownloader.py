@@ -7,6 +7,8 @@ import requests
 from PIL import Image, ImageTk
 from io import BytesIO
 
+# Drapeau global d'interuption
+flStop = False
 
 def getThumbnail(thumbnailLink):
     response = requests.get(thumbnailLink)
@@ -32,20 +34,58 @@ def resetIDVideo():
     labelMiniature.configure(image=None)
     frameIdentification.update()
 
+# Init download function
 def onClickDownload():
+    global flStop
+    flStop = False
+    finishLabel.configure(text="")
+    labelPercent.configure(text="0%")
+    progressBar.set(0)
+    frameDownloader.update()
+    
     try:
         ytlink = labelLink.get()
         ytObject = YouTube(url=ytlink, on_progress_callback=on_progress)
-        video = ytObject.streams.get_highest_resolution()
-        video.download()
-        finishLabel.configure(text="Download is done !", text_color="#41A253")
-    except:
-        finishLabel.configure(text="Youtube link is not valid !", text_color="#CA4A4A")
+        dlThread = threading.Thread(target=download, args=(ytObject,))
+        dlThread.start()
+        
+    except Exception as e:
+        if flStop:
+            finishLabel.configure(text="Download is canceled !", text_color="#EA9544")
+        else:
+            finishLabel.configure(text="Youtube link is not valid !", text_color="#CA4A4A")
+
+# Fonction donwload
+def download(ytObject):
+    global flStop
+    download_path = os.getcwd() + "\\" + ytObject.title + ".mp4"
+
+    try:
+        content = ytObject.streams.get_highest_resolution()
+        content.download()
+
+        if flStop:
+            # Supprimer le fichier téléchargé si le téléchargement est arrêté
+            os.remove(download_path)
+            finishLabel.configure(text="Download is canceled !", text_color="#EA9544")
+        else:
+            finishLabel.configure(text="Download is done !", text_color="#41A253")
+            
+    except Exception as e:
+        if flStop:
+            # Supprimer le fichier téléchargé si le téléchargement est arrêté
+            os.remove(download_path)
+            finishLabel.configure(text="Download is canceled !", text_color="#EA9544")
+        else:
+            finishLabel.configure(text="Youtube link is not valid !", text_color="#CA4A4A")
 
 def onClickCancel():
-    print("cancel")
+    global flStop
+    flStop = True
 
 def on_progress(stream, chunk, bytes_remaining):
+    if flStop:
+        raise Exception("Download is canceled !")
     total_size = stream.filesize
     bytes_dl = total_size-bytes_remaining
     per_complete = bytes_dl / total_size * 100
