@@ -2,14 +2,14 @@
 
 ![GUI of YT Downloader Plus](img/image.png)
 
-**YT Downloader Plus** est une application de bureau moderne et intuitive conçue pour télécharger facilement des vidéos et de l'audio depuis YouTube. Grâce à une interface graphique fluide (CustomTkinter), l'utilisateur bénéficie d'un contrôle total sur la qualité de ses téléchargements.
+**YT Downloader Plus** est une application de bureau moderne et intuitive conçée pour télécharger facilement des vidéos et de l'audio depuis YouTube. Grâce à une interface graphique fluide (CustomTkinter), l'utilisateur bénéficie d'un contrôle total sur la qualité de ses téléchargements.
 
-## ✨ Fonctionnalités (Version 2.0)
+## ✨ Fonctionnalités (Version 2.1)
 
 ### 📥 Téléchargement Flexible
 * **Vidéo Haute Qualité** : Sélectionnez la résolution souhaitée (ex: 1080p, 720p) parmi les flux disponibles.
-* **Extraction Audio** : Option dédiée pour télécharger uniquement la piste audio (format adapté pour le MP3/abr).
-* **Multi-format** : Gestion intelligente des flux progressifs (MP4) pour une compatibilité maximale.
+* **Extraction Audio** : Option dédiée pour télécharger uniquement la piste audio (format adapté pour le MP3/m4a).
+* **Multi-format** : Utilisation du moteur `yt-dlp` pour une compatibilité maximale et une stabilité optimale face aux changements de YouTube.
 
 ### 🔍 Prévisualisation & Détails
 * **Analyse Instantanée** : Dès que l'URL est collée, l'application récupère automatiquement :
@@ -35,7 +35,7 @@
 * **Python 3.x**
 * Les bibliothèques suivantes (installables via pip) :
   ```bash
-  pip install customtkinter pytube requests Pillow
+  pip install customtkinter yt-dlp requests Pillow
   ```
 
 ### Utilisation
@@ -53,10 +53,10 @@
 
 ## ⚙️ Technologies Utilisées
 * **Interface Graphique** : `CustomTkinter` (UI moderne et adaptative).
-* **Moteur de téléchargement** : `pytube` (extraction des flux YouTube).
+* **Moteur de téléchargement** : `yt-dlp` (moteur robuste pour l'extraction de flux).
 * **Traitement d'images** : `Pillow` & `requests` (gestion des miniatures).
 * **Concurrence** : `threading` (pour garantir une interface fluide et non bloquante).
 
 ---
 
-*Note : L'interface utilisateur ayant évolué avec la V2.0, la capture d'écran (img/image.png) devra être mise à jour pour refléter les nouvelles options de sélection.*
+*Note : L'interface utilisateur ayant évolué avec la V2.1, la capture d'écran (img/image.png) devra être mise à jour pour refléter les nouvelles options de sélection.*
