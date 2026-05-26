@@ -7,8 +7,8 @@
 ## ✨ Fonctionnalités (Version 2.1)
 
 ### 📥 Téléchargement Flexible
-* **Vidéo Haute Qualité** : Sélectionnez la résolution souhaitée (ex: 1080p, 720p) parmi les flux disponibles.
-* **Extraction Audio** : Option dédiée pour télécharger uniquement la piste audio (format adapté pour le MP3/m4a).
+* **Vidéo Haute Qualité** : Téléchargez la vidéo complète (vidéo + audio) dans la résolution souhaitée (ex: 1080p, 720p). Le fichier de sortie sera au format MP4 avec des codecs universellement compatibles.
+* **Extraction Audio** : Option dédiée pour télécharger uniquement la piste audio au format MP3.
 * **Multi-format** : Utilisation du moteur `yt-dlp` pour une compatibilité maximale et une stabilité optimale face aux changements de YouTube.
 
 ### 🔍 Prévisualisation & Détails
@@ -21,7 +21,7 @@
 
 ### 🛠️ Contrôle & Expérience Utilisateur
 * **Gestion du Dossier** : Choisissez précisément le répertoire de destination pour vos fichiers.
-* **Progression en Temps Réel** : Barre de progression et indicateur de pourcentage pour suivre l'avancement.
+* **Progression en Temps Réel** : La barre de progression et l'indicateur de pourcentage affichent désormais l'avancement de manière fiable, y compris pendant les phases de post-traitement (fusion/conversion).
 * **Annulation Intelligente** : Possibilité d'interrompre un téléchargement en cours avec suppression automatique du fichier partiel pour éviter les fichiers corrompus.
 * **Robustesse** : 
     * Nettoyage automatique des caractères spéciaux dans les noms de fichiers pour éviter les erreurs système.
@@ -37,6 +37,7 @@
   ```bash
   pip install customtkinter yt-dlp requests Pillow
   ```
+* **FFmpeg** : Nécessaire pour la fusion des flux vidéo/audio et la conversion des formats. Téléchargez-le depuis le [site officiel de FFmpeg](https://ffmpeg.org/download.html). Assurez-vous que `ffmpeg.exe` et `ffprobe.exe` sont disponibles dans votre PATH système ou spécifiez le chemin complet dans le code de l'application (actuellement configuré sur `C:\ffmpeg\bin\ffmpeg.exe` pour Windows).
 
 ### Utilisation
 1. Lancez l'application :
@@ -45,7 +46,7 @@
    ```
 2. Collez l'URL YouTube dans le champ de saisie.
 3. Attendez l'affichage des détails de la vidéo.
-4. Sélectionnez la **qualité vidéo** ou l'**option audio**.
+4. Sélectionnez la **qualité vidéo** désirée pour télécharger la vidéo complète (avec image et son). Si vous souhaitez uniquement télécharger l'audio, sélectionnez l'option **"Télécharger Audio Seulement"** dans le menu déroulant dédié.
 5. (Optionnel) Cliquez sur **"Choisir le dossier"** pour changer la destination.
 6. Cliquez sur **"Download"** et suivez la progression !
 
@@ -59,4 +60,4 @@
 
 ---
 
-*Note : L'interface utilisateur ayant évolué avec la V2.1, la capture d'écran (img/image.png) devra être mise à jour pour refléter les nouvelles options de sélection.*
+*Note : La capture d'écran (img/image.png) devra être mise à jour pour refléter l'interface actuelle et les dernières fonctionnalités.*

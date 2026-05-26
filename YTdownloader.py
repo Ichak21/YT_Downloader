@@ -9,22 +9,21 @@ from io import BytesIO
 from tkinter import filedialog
 
 def sanitize_filename(filename):
-    """Nettoie une chaîne de caractères pour le nom de fichier."""
+    """Nettoies une chaîne de caractères pour le nom de fichier."""
     return "".join(c for c in filename if c.isalnum() or c in (" ", ".", "_", "-")).rstrip()
 
 class YTDownloaderApp:
     def __init__(self, master):
         self.master = master
-        self.master.geometry("720x600")
+        self.master.geometry("700x600")
         self.master.title("YT Downloader + (yt-dlp Edition)")
-
         customtkinter.set_appearance_mode("System")
-
+        
         self.flStop = False
         self.download_path = os.getcwd()
         self.video_info = None
-        self.selected_quality = tkintermente = tkinter.StringVar(value="Sélectionner la qualité")
-        self.selected_audio_format = tkinter.StringVar(value="Non")
+        self.selected_quality = tkinter.StringVar(value="Sélectionner la qualité vidéo")
+        self.selected_audio_format = tkinter.StringVar(value="Télécharger Vidéo Complète")
 
         # --- UI Setup ---
         self.frameIdentification = customtkinter.CTkFrame(self.master, width=700, height=240)
@@ -42,30 +41,31 @@ class YTDownloaderApp:
         self.labelAuteur = customtkinter.CTkLabel(self.frameDetails, text="Auteur : ", anchor="w", wraplength=290, font=("Helvetica", 12, "bold"))
         self.labelAuteur.pack(padx=10, fill="both", side="top", expand=True)
 
-        self.labelDuree = customtkinter.CTkLabel(self.frameDetails, text="Duree : ", anchor="w", wraplength=290, font=("Helvetica", 12, "bold"))
+        self.labelDuree = customtkinter.CTkLabel(self.frameDetails, text="Durée : ", anchor="w", wraplength=290, font=("Helvetica", 12, "bold"))
         self.labelDuree.pack(padx=10, fill="both", side="top", expand=True)
 
         self.labelVues = customtkinter.CTkLabel(self.frameDetails, text="Vues : ", anchor="w", wraplength=290, font=("Helvetica", 12, "bold"))
         self.labelVues.pack(padx=10, fill="both", side="top", expand=True)
 
         self.frameDownloader = customtkinter.CTkFrame(self.master, width=700, fg_color="transparent")
-        self.frameDownloader.pack(fill="both", expand=True, pady=(0,10))
+        self.frameDownloader.pack(fill="both", expand=True, pady=(0, 10))
 
         self.urlValue = tkinter.StringVar()
         self.urlValue.trace_add("write", self.onChangeURL)
+        
         self.labelLink = customtkinter.CTkEntry(self.frameDownloader, textvariable=self.urlValue, corner_radius=10, width=400, height=40, border_color="#4180A2")
-        self.labelLink.pack(pady=2lemma=20)
+        self.labelLink.pack(pady=20)
 
         self.frameOptions = customtkinter.CTkFrame(self.frameDownloader, fg_color="transparent")
         self.frameOptions.pack(pady=5)
 
-        self.quality_optionmenu = customtkinter.CTkOptionMenu(self.frameOptions, variable=self.selected_quality, values=["Sélectionner la qualité"])
+        self.quality_optionmenu = customtkinter.CTkOptionMenu(self.frameOptions, variable=self.selected_quality, values=["Sélectionner la qualité vidéo"])
         self.quality_optionmenu.pack(side="left", padx=10)
 
-        self.audio_optionmenu = customtkinter.CTkOptionMenu(self.frameOptions, variable=self.selected_audio_format, values=["Non", "Télécharger l'audio"])
+        self.audio_optionmenu = customtkinter.CTkOptionMenu(self.frameOptions, variable=self.selected_audio_format, values=["Télécharger Vidéo Complète", "Télécharger Audio Seulement"])
         self.audio_optionmenu.pack(side="left", padx=10)
 
-        self.download_path_button = customtkinter.CTkButton(self.frameOptions, text="Choisir le dossier", command=self.select_download_append_path)
+        self.download_path_button = customtkinter.CTkButton(self.frameOptions, text="Choisir le dossier", command=self.select_download_path)
         self.download_path_button.pack(side="left", padx=10)
 
         self.current_download_path_label = customtkinter.CTkLabel(self.frameDownloader, text=f"Dossier: {self.download_path}")
@@ -93,60 +93,63 @@ class YTDownloaderApp:
     def getThumbnail(self, thumbnailLink):
         try:
             response = requests.get(thumbnailLink, timeout=5)
-            img = Image.open(Byteslob := BytesIO(response.content))
-            img = img.resize(size=(380, 220))
+            img_data = BytesIO(response.content)
+            img = Image.open(img_data)
+            img = img.resize((380, 220))
             return ImageTk.PhotoImage(img)
-        except:
+        except Exception:
             return None
 
     def updateIDVideo(self, info):
         self.labelTitre.configure(text="Titre : " + info.get('title', 'N/A'))
         self.labelAuteur.configure(text="Auteur : " + info.get('uploader', 'N/A'))
-        duration = info.get('duration', 0)
-        self.labelDuree.configure(text=f"Duree : {int(duration // 60)} min")
-        views = info.get('view_count', 0)
-        self.labelVues.configure(text=f"Vues : {round(views / 1000, 2)} k")
         
-        img = self.getThumbnail(thumbnailLink=info.get('thumbnail'))
-        if img: self.labelMiniature.configure(image=img)
+        duration = info.get('duration', 0)
+        self.labelDuree.configure(text=f"Durée : {int(duration // 60)} min")
+        
+        views = info.get('view_count', 0)
+        self.labelVues.configure(text=f"Vues : {round(views / 1000, 2)} k" if views else "Vues : 0")
 
-        # Extract resolutions
+        img = self.getThumbnail(thumbnailLink=info.get('thumbnail'))
+        if img:
+            self.labelMiniature.configure(image=img)
+            self.labelMiniature.image = img  # Garder une référence pour éviter le garbage collection
+
         formats = info.get('formats', [])
         qualities = []
         for f in formats:
             if f.get('vcodec') != 'none' and f.get('height'):
                 res = f"{f['height']}p"
-                if res not in qualities: qualities.append(res)
+                if res not in qualities:
+                    qualities.append(res)
         
-        self.video_qualities = sorted(qualities, key=lambda x: int(x[:-1]), reverse=True)
-        
-        if self.video_qualities:
+        if qualities:
+            self.video_qualities = sorted(qualities, key=lambda x: int(x[:-1]), reverse=True)
             self.quality_optionmenu.configure(values=self.video_qualities)
             self.selected_quality.set(self.video_qualities[0])
         else:
-            self.quality_optionmenu.configure(values=["Aucune qualité"])
+            self.quality_optionmenu.configure(values=["Aucune qualité vidéo disponible"])
 
-        # Audio options
-        audio_opts = ["Non"]
+        audio_opts = ["Télécharger Vidéo Complète"]
         for f in formats:
             if f.get('acodec') != 'none' and f.get('abr'):
-                audio_opts.append(f"Audio ({f['abr']} kbps)")
+                audio_opts.append(f"Télécharger Audio Seulement ({f['abr']} kbps)")
         self.audio_optionmenu.configure(values=list(set(audio_opts)))
 
     def resetIDVideo(self):
         self.labelTitre.configure(text="Titre : ")
         self.labelAuteur.configure(text="Auteur : ")
-        self.labelDuree.configure(text="Duree : ")
+        self.labelDuree.configure(text="Durée : ")
         self.labelVues.configure(text="Vues : ")
         self.labelMiniature.configure(image=None)
-        self.quality_optionmenu.configure(values=["Sélectionner"])
-        self.audio_optionmenu.configure(values=["Non"])
+        self.quality_optionmenu.configure(values=["Sélectionner la qualité vidéo"])
+        self.audio_optionmenu.configure(values=["Télécharger Vidéo Complète"])
 
-    def select_download_append_path(self):
+    def select_download_path(self):
         folder = filedialog.askdirectory()
         if folder:
             self.download_path = folder
-            self.current_download_append_path_label.configure(text=f"Dossier: {self.download_path}")
+            self.current_download_path_label.configure(text=f"Dossier: {self.download_path}")
 
     def onChangeURL(self, *args):
         url = self.urlValue.get()
@@ -162,7 +165,7 @@ class YTDownloaderApp:
                     self.video_info = info
                     self.master.after(0, lambda: self.updateIDVideo(info))
                     self.master.after(0, lambda: self.finishLabel.configure(text="", text_color="white"))
-            except Exception as e:
+            except Exception:
                 self.master.after(0, self.resetIDVideo)
                 self.master.after(0, lambda: self.finishLabel.configure(text="Lien invalide ou erreur", text_color="#CA4A4A"))
 
@@ -170,7 +173,7 @@ class YTDownloaderApp:
 
     def onClickDownload(self):
         if not self.video_info:
-            self.finishLabel.configure(text="Chargez d'abord une vidéo !", text_color="#CA4A4*A")
+            self.finishLabel.configure(text="Chargez d'abord une vidéo !", text_color="#CA4A4A")
             return
         
         self.flStop = False
@@ -184,18 +187,34 @@ class YTDownloaderApp:
     def download_process(self, url):
         try:
             quality = self.selected_quality.get()
-            is_audio = self.selected_audio_format.get() != "Non"
+            is_audio = self.selected_audio_format.get() == "Télécharger Audio Seulement"
             sanitized_title = sanitize_filename(self.video_info.get('title', 'video'))
             
             ydl_opts = {
-                'outtmpl': os.path.join(self.download_path, f'{sanitized_title}.%(ext)s'),
                 'progress_hooks': [self.progress_hook],
+                'ffmpeg_location': 'C:\\ffmpeg\\bin\\ffmpeg.exe',
+                'verbose': True,
+                'keepvideo': False,
+                'noplaylist': True,
             }
 
             if is_audio:
                 ydl_opts['format'] = 'bestaudio/best'
+                ydl_opts['outtmpl'] = os.path.join(self.download_path, f'{sanitized_title}.mp3')
+                ydl_opts['postprocessors'] = [{
+                    'key': 'FFmpegExtractAudio',
+                    'preferredcodec': 'mp3',
+                    'preferredquality': '192',
+                }]
             else:
-                ydl_opts['format'] = f'bestvideo[height<={quality[:-1]}]+bestaudio/best[height<={quality[:-1]}]'
+                res_val = quality[:-1] if 'p' in quality else '1080'
+                ydl_opts['format'] = f'bestvideo[ext=mp4][height<={res_val}]+bestaudio[ext=m4a]/best[ext=mp4][height<={res_val}]/best'
+                ydl_opts['outtmpl'] = os.path.join(self.download_path, f'{sanitized_title}.mp4')
+                ydl_opts['postprocessors'] = [{
+                    'key': 'FFmpegVideoConvertor',
+                    'preferedformat': 'mp4',
+                }]
+                ydl_opts['outtmpl'] = os.path.join(self.download_path, f'{sanitized_title}.mp4')
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
@@ -205,19 +224,36 @@ class YTDownloaderApp:
 
         except Exception as e:
             msg = str(e)
-            if "Annulation" in msg:
+            if "Annulation" in msg or self.flStop:
                 self.master.after(0, lambda: self.finishLabel.configure(text="Annulé !", text_color="#EA9544"))
             else:
                 self.master.after(0, lambda: self.finishLabel.configure(text=f"Erreur: {msg[:30]}", text_color="#CA4A4A"))
 
     def progress_hook(self, d):
         if d['status'] == 'downloading':
-            p_str = d.get('_percent_str', '0%').replace('%', '')
-            try:
-                perc = float(p_str) / 100
-                self.master.after(0, lambda: self.progressBar.set(perc))
-                self.master.after(0, lambda: self.labelPercent.configure(text=f"{p_str}%"))
-            except: pass
+            if 'total_bytes' in d and 'downloaded_bytes' in d:
+                total_bytes = d['total_bytes']
+                downloaded_bytes = d['downloaded_bytes']
+                if total_bytes > 0:
+                    perc = (downloaded_bytes / total_bytes) * 100
+                    self.master.after(0, lambda: self.progressBar.set(perc / 100))
+                    self.master.after(0, lambda: self.labelPercent.configure(text=f"{perc:.1f}%"))
+                else:
+                    self.master.after(0, lambda: self.labelPercent.configure(text="0% (taille inconnue)"))
+            elif '_percent_str' in d:
+                p_str = d.get('_percent_str', '0%').replace('%', '').strip()
+                try:
+                    perc = float(p_str)
+                    self.master.after(0, lambda: self.progressBar.set(perc / 100))
+                    self.master.after(0, lambda: self.labelPercent.configure(text=f"{p_str}%"))
+                except ValueError:
+                    self.master.after(0, lambda: self.labelPercent.configure(text="Progression..."))
+            else:
+                self.master.after(0, lambda: self.labelPercent.configure(text="Progression inconnue"))
+        elif d['status'] == 'finished':
+            self.master.after(0, lambda: self.progressBar.set(1)) # Téléchargement terminé
+            self.master.after(0, lambda: self.labelPercent.configure(text="100%"))
+        
         if self.flStop:
             raise Exception("Annulation")
 
@@ -228,3 +264,4 @@ if __name__ == "__main__":
     app = customtkinter.CTk()
     yt_app = YTDownloaderApp(app)
     app.mainloop()
+

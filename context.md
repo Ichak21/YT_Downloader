@@ -11,11 +11,14 @@ Ce projet fournit une application de bureau simple avec une interface graphique 
     -   Téléchargement de vidéos via une URL.
     -   Prévisualisation des détails de la vidéo (titre, auteur, durée, vues, miniature).
     -   **Nouveau :** Sélection de la qualité vidéo (ex: 1080p, 720p).
-    -   **Nouveau :** Option de téléchargement audio uniquement (ex: en format MP3/m4a).
+    -   **Nouveau :** Option de téléchargement audio uniquement (ex: en format MP3).
     -   **Nouveau :** Choix du répertoire de téléchargement.
     -   Barre de progression du téléchargement.
     -   Possibilité d'annuler un téléchargement en cours.
     -   Gestion améliorée des erreurs pour un feedback utilisateur plus précis.
+    -   **Correction :** Amélioration de la fiabilité de la barre de progression pour tous les types de téléchargements.
+    -   **Correction :** Gestion améliorée des formats de sortie pour garantir des fichiers MP4 lisibles (codec H.264) pour les vidéos et MP3 pour l\"audio, en résolvant les problèmes de fichiers illisibles dus aux conversions incorrectes de flux audio en vidéo.
+    -   **Amélioration UI :** Clarification des libellés des options de sélection audio/vidéo pour une meilleure compréhension utilisateur.
 
 ## 3. Technologies Principales
 
