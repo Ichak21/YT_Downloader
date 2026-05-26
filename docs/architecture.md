@@ -49,6 +49,7 @@ Construite avec `CustomTkinter`, l'interface est contenue dans le script `YTdown
 
 ### Logique de Téléchargement
 La bibliothèque `pytube` gère toute l'interaction avec YouTube. La fonction `download()` utilise `ytObject.streams.get_highest_resolution()` pour récupérer le flux vidéo de la plus haute qualité et le télécharge.
+Pour éviter les erreurs système, le titre de la vidéo est nettoyé via une fonction `sanitize_filename` avant d'être utilisé comme nom de fichier. Cela garantit que les caractères non valides sont supprimés, rendant la création et la suppression de fichiers fiables.
 
 ### Gestion des Threads
 Pour garantir que l'interface utilisateur reste réactive pendant le téléchargement (qui peut être long), la fonction `onClickDownload` lance le processus de téléchargement dans un thread séparé (`threading.Thread`).

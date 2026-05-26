@@ -1,4 +1,5 @@
 import threading
+import re
 import tkinter
 import os
 import customtkinter
@@ -6,6 +7,14 @@ from pytube import YouTube
 import requests
 from PIL import Image, ImageTk
 from io import BytesIO
+
+
+def sanitize_filename(filename):
+    """
+    Nettoie une chaîne de caractères pour la rendre utilisable comme nom de fichier.
+    Supprime les caractères interdits.
+    """
+    return "".join(c for c in filename if c.isalnum() or c in (' ', '.', '_')).rstrip()
 
 # Drapeau global d'interuption
 flStop = False
@@ -58,7 +67,8 @@ def onClickDownload():
 # Fonction donwload
 def download(ytObject):
     global flStop
-    download_path = os.getcwd() + "\\" + ytObject.title + ".mp4"
+    sanitized_title = sanitize_filename(ytObject.title)
+    download_path = os.getcwd() + "\\" + sanitized_title + ".mp4"
 
     try:
         content = ytObject.streams.get_highest_resolution()

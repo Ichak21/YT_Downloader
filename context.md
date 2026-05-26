@@ -6,15 +6,14 @@ Ce projet fournit une application de bureau simple avec une interface graphique 
 
 ## 2. État Actuel
 
--   **Version** : 1.0
+-   **Version** : 1.1
 -   **Fonctionnalités** :
     -   Téléchargement de vidéos via une URL.
     -   Prévisualisation des détails de la vidéo (titre, auteur, durée, vues, miniature).
     -   Barre de progression du téléchargement.
     -   Possibilité d'annuler un téléchargement en cours.
--   **Bug Connu** : L'annulation du téléchargement échoue si le titre de la vidéo contient certains caractères spéciaux, empêchant la suppression du fichier temporaire.
+    -   Correction du bug des caractères spéciaux lors de l'annulation.
 -   **Roadmap (v2.0)** :
-    -   Correction du bug des caractères spéciaux.
     -   Ajout d'options de téléchargement (audio uniquement, sélection de la qualité vidéo).
 
 ## 3. Technologies Principales
