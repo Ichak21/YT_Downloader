@@ -2,13 +2,15 @@
 
 ![GUI of YT Downloader Plus](img/image.png)
 
-## V1.1
-+ Donwload all videos from YT via URL
-+ Preview all details in GUI
-+ Possibility to Cancel in progress
-+ Fix bug of special caracters
+## V2.0
++ Télécharge toutes les vidéos de YouTube via une URL.
++ Affiche les détails de la vidéo dans l'interface graphique (titre, auteur, durée, vues, miniature).
++ **Nouveau :** Possibilité de sélectionner la qualité vidéo désirée.
++ **Nouveau :** Option de télécharger uniquement la piste audio.
++ **Nouveau :** Permet de choisir le répertoire de destination pour les téléchargements.
++ Barre de progression visible pendant le téléchargement.
++ Possibilité d'annuler un téléchargement en cours.
++ Correction des bugs liés aux caractères spéciaux dans les noms de fichiers.
++ Gestion améliorée des erreurs pour un feedback utilisateur plus clair.
 
-## V2.0 (comming soon)
-+ Add option of download : 
-    + only sound
-    + quality of video
+_Note: L'interface utilisateur ayant évolué avec la V2.0, la capture d'écran (img/image.png) devra être mise à jour pour refléter les nouvelles options._

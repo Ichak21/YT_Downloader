@@ -2,19 +2,20 @@
 
 ## 1. Objectif du Projet
 
-Ce projet fournit une application de bureau simple avec une interface graphique pour télécharger des vidéos depuis YouTube. L'utilisateur peut coller une URL, voir les détails de la vidéo et lancer le téléchargement, avec une option pour l'annuler en cours de route.
+Ce projet fournit une application de bureau simple avec une interface graphique pour télécharger des vidéos depuis YouTube. L'utilisateur peut coller une URL, voir les détails de la vidéo et lancer le téléchargement, avec des options avancées de qualité vidéo ou audio uniquement, et la possibilité d'annuler en cours de route.
 
 ## 2. État Actuel
 
--   **Version** : 1.1
+-   **Version** : 2.0
 -   **Fonctionnalités** :
     -   Téléchargement de vidéos via une URL.
     -   Prévisualisation des détails de la vidéo (titre, auteur, durée, vues, miniature).
+    -   **Nouveau :** Sélection de la qualité vidéo (ex: 1080p, 720p).
+    -   **Nouveau :** Option de téléchargement audio uniquement (ex: en format MP3).
+    -   **Nouveau :** Choix du répertoire de téléchargement.
     -   Barre de progression du téléchargement.
     -   Possibilité d'annuler un téléchargement en cours.
-    -   Correction du bug des caractères spéciaux lors de l'annulation.
--   **Roadmap (v2.0)** :
-    -   Ajout d'options de téléchargement (audio uniquement, sélection de la qualité vidéo).
+    -   Gestion améliorée des erreurs pour un feedback utilisateur plus précis.
 
 ## 3. Technologies Principales
 
@@ -22,11 +23,12 @@ Ce projet fournit une application de bureau simple avec une interface graphique 
 -   **Interface Graphique (GUI)** : `Tkinter` / `CustomTkinter`
 -   **Interaction YouTube** : `pytube`
 -   **Gestion des images** : `requests`, `Pillow (PIL)`
+-   **Sélection de fichiers/dossiers** : `tkinter.filedialog`
 -   **Packaging** : `PyInstaller`
 
 ## 4. Structure du Dépôt
 
--   `YTdownloader.py`: Script principal de l'application.
+-   `YTdownloader.py`: Script principal de l'application (désormais orienté objet).
 -   `README.md`: Informations générales sur le projet.
 -   `.roorules`: Règles pour l'agent IA.
 -   `app_v1.spec`: Fichier de configuration pour `PyInstaller`.
@@ -35,4 +37,4 @@ Ce projet fournit une application de bureau simple avec une interface graphique 
 
 ## 5. Instructions pour l'Agent
 
-**Règle Fondamentale** : Après chaque série de modifications validées, les fichiers `context.md` et `docs/architecture.md` doivent être mis à jour pour refléter avec précision les changements et les décisions prises.
+**Règle Fondamentale** : Après chaque série de modifications validées (code ou documentation), les fichiers `context.md` et `docs/architecture.md` doivent être mis à jour pour refléter avec précision les changements et les décisions prises.
